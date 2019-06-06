@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gringauz.tetris.FieldViewImpl xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:tools="http://schemas.android.com/tools"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="match_parent">
+
+    <com.gringauz.tetris.FieldCanvas
+            android:id="@+id/view_field_canvas"
+            android:layout_height="@dimen/height_field"
+            android:layout_width="@dimen/width_field"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/bt_shift_left"/>
+
+    <Button
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/indent_quadruple"
+            android:layout_marginBottom="@dimen/indent_quadruple"
+            android:text="@string/text_bt_shift_left"
+            android:layout_width="@dimen/size_button"
+            android:layout_height="@dimen/size_button"
+            android:id="@+id/bt_shift_left"
+            android:textSize="@dimen/textsize_button"/>
+
+    <Button
+            app:layout_constraintStart_toEndOf="@id/bt_shift_left"
+            app:layout_constraintBottom_toBottomOf="@id/bt_shift_left"
+            android:layout_marginStart="@dimen/indent_double"
+            android:text="@string/text_bt_rotate_left"
+            android:layout_width="@dimen/size_button"
+            android:layout_height="@dimen/size_button"
+            android:id="@+id/bt_rotate_left"/>
+
+    <Button
+            app:layout_constraintEnd_toStartOf="@id/bt_shift_right"
+            app:layout_constraintBottom_toBottomOf="@id/bt_shift_right"
+            android:layout_marginEnd="@dimen/indent_double"
+            android:text="@string/text_rotate_right"
+            android:layout_width="@dimen/size_button"
+            android:layout_height="@dimen/size_button"
+            android:id="@+id/bt_rotate_right"/>
+
+    <Button
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/indent_quadruple"
+            android:layout_marginEnd="@dimen/indent_quadruple"
+            android:text="@string/text_shift_right"
+            android:layout_width="@dimen/size_button"
+            android:layout_height="@dimen/size_button"
+            android:id="@+id/bt_shift_right"/>
+
+</com.gringauz.tetris.FieldViewImpl>

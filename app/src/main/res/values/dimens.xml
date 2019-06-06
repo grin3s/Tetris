@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_button">64dp</dimen>
+    <dimen name="textsize_button">24sp</dimen>
+    <dimen name="indent">8dp</dimen>
+    <dimen name="indent_double">16dp</dimen>
+    <dimen name="indent_quadruple">32dp</dimen>
+    <dimen name="width_field">250dp</dimen>
+    <dimen name="height_field">500dp</dimen>
+</resources>
