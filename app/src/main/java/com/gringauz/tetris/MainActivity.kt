@@ -10,6 +10,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        (view_field as FieldViewImpl).presenter = FieldPresenterImpl(GameImpl())
+        val game = GameImpl()
+        (view_field as FieldViewImpl).presenter = FieldPresenterImpl(game)
+        game.start()
     }
 }

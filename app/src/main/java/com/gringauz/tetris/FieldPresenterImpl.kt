@@ -2,12 +2,27 @@ package com.gringauz.tetris
 
 import com.gringauz.tetris.core.Game
 
-class FieldPresenterImpl(private val game: Game): FieldPresenter {
+class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener {
     lateinit var fieldView: FieldView
+
+    init {
+        game.subscribe(this)
+    }
+
+    override fun onFieldChanged() {
+        fieldView.setField(game.field())
+    }
+
+    override fun onGameOver() {
+
+    }
+
+    override fun onScoreChanged() {
+
+    }
 
     override fun setView(view: FieldView) {
         fieldView = view
-        fieldView.setField(game.field())
     }
 
     override fun onRightClick() {
