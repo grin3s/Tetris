@@ -11,7 +11,7 @@ private enum class Direction {
 
 private val SPAWN_POSITION = Pair(0, 3)
 
-class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
+class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
 
     private val gravity: Gravity = GravityImpl(eventLoop)
 
@@ -30,7 +30,8 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
     override fun onTick() {
         val newTetromino = move(Direction.DOWN)
         if (collides(newTetromino)) {
-            spawn()
+            gravity.deactivate()
+            eventLoop.postDelayed(500) { spawn() }
         } else {
             updateTetromino(newTetromino)
         }
@@ -53,7 +54,7 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
     }
 
     override fun onFastDropClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        gravity.activate(GravityMode.FAST)
     }
 
     override fun onHoldPiece() {
@@ -71,7 +72,6 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
     override fun start() {
         fieldData.fill(null, 0, fieldData.size)
         spawn()
-        gravity.activate()
     }
 
     override fun pause() {
@@ -125,6 +125,8 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
             rotationIndex = 0)
 
         updateTetromino(currentTetromino)
+
+        gravity.activate(GravityMode.ORDINARY)
     }
 
     private fun linearPos(position: Pair<Int, Int>) = position.first * FIELD_WIDTH + position.second

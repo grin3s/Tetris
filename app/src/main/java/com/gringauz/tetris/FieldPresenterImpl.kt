@@ -47,7 +47,7 @@ class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener 
     }
 
     override fun onFastDropClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        game.onFastDropClick()
     }
 
     override fun onHoldPiece() {

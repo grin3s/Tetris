@@ -17,8 +17,8 @@
     <Button
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="@dimen/indent_quadruple"
-            android:layout_marginBottom="@dimen/indent_quadruple"
+            android:layout_marginStart="@dimen/indent_double"
+            android:layout_marginBottom="@dimen/indent_double"
             android:text="@string/text_bt_shift_left"
             android:layout_width="@dimen/size_button"
             android:layout_height="@dimen/size_button"
@@ -46,8 +46,8 @@
     <Button
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="@dimen/indent_quadruple"
-            android:layout_marginEnd="@dimen/indent_quadruple"
+            android:layout_marginBottom="@dimen/indent_double"
+            android:layout_marginEnd="@dimen/indent_double"
             android:text="@string/text_shift_right"
             android:layout_width="@dimen/size_button"
             android:layout_height="@dimen/size_button"
@@ -62,5 +62,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/view_field_canvas"/>
+    <Button
+            android:text="@string/text_bt_drop"
+            android:layout_width="@dimen/size_button"
+            android:layout_height="@dimen/size_button"
+            app:layout_constraintStart_toStartOf="@id/bt_shift_right"
+            app:layout_constraintBottom_toTopOf="@id/bt_shift_right"
+            android:layout_marginBottom="@dimen/indent_double"
+            android:id="@+id/bt_fast_drop"/>
 
 </com.gringauz.tetris.FieldViewImpl>
