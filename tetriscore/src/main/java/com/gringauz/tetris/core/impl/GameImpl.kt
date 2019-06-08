@@ -3,7 +3,16 @@ package com.gringauz.tetris.core.impl
 import com.gringauz.tetris.core.*
 import kotlin.random.Random
 
-class GameImpl: Game {
+private enum class Direction {
+    LEFT,
+    RIGHT,
+    DOWN
+}
+
+class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
+
+    private val gravity: Gravity = GravityImpl(eventLoop)
+
     private lateinit var currentTetromino: Tetromino
 
     private val random = Random(42)
@@ -12,12 +21,20 @@ class GameImpl: Game {
 
     private var fieldData: Array<TetrominoType?> = arrayOfNulls<TetrominoType?>(FIELD_HEIGHT * FIELD_WIDTH)
 
+    init {
+        gravity.subscribe(this)
+    }
+
+    override fun onTick() {
+        move(Direction.DOWN)
+    }
+
     override fun onRightClick() {
-        shift(1)
+        move(Direction.RIGHT)
     }
 
     override fun onLeftClick() {
-        shift(-1)
+        move(Direction.LEFT)
     }
 
     override fun onRightRotate() {
@@ -53,10 +70,11 @@ class GameImpl: Game {
         fieldData.fill(null, 0, fieldData.size)
         updateTetromino(currentTetromino)
         notifyFieldChange()
+        gravity.activate()
     }
 
     override fun pause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        gravity.deactivate()
     }
 
     override fun end() {
@@ -80,8 +98,25 @@ class GameImpl: Game {
         updateTetromino(newTetromino)
     }
 
-    private fun shift(direction: Int) {
-        val newTetromino = Tetromino(currentTetromino.type, Pair(currentTetromino.position.first, currentTetromino.position.second  + direction), currentTetromino.rotationIndex)
+    private fun move(direction: Direction) {
+        val verticalMove = when (direction) {
+            Direction.DOWN -> 1
+            else -> 0
+        }
+
+        val horizontalMove = when (direction) {
+            Direction.LEFT -> -1
+            Direction.RIGHT -> 1
+            else -> 0
+        }
+
+        val newTetromino = Tetromino(
+            currentTetromino.type,
+            Pair(
+                currentTetromino.position.first + verticalMove,
+                currentTetromino.position.second + horizontalMove),
+            currentTetromino.rotationIndex)
+
         updateTetromino(newTetromino)
     }
 
