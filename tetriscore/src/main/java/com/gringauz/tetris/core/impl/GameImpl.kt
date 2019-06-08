@@ -9,7 +9,7 @@ private enum class Direction {
     DOWN
 }
 
-class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
+class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
 
     private val gravity: Gravity = GravityImpl(eventLoop)
 
@@ -120,7 +120,14 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
         updateTetromino(newTetromino)
     }
 
+    private fun linearPos(position: Pair<Int, Int>) = position.first * FIELD_WIDTH + position.second
+
     private fun updateTetromino(newTetromino: Tetromino) {
+
+        if (collides(newTetromino)) {
+            return
+        }
+
         val curPos = currentTetromino.position
         currentTetromino.type.states[currentTetromino.rotationIndex].forEach {
             fieldData[(curPos.first + it.first) * FIELD_WIDTH + curPos.second + it.second] = null
@@ -133,5 +140,27 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
 
         currentTetromino = newTetromino
         notifyFieldChange()
+    }
+
+    private fun collides(newTetromino: Tetromino): Boolean {
+        newTetromino.positions().forEach { pos ->
+            // check field boundaries
+            if (pos.first < 0 || pos.first >= FIELD_HEIGHT) {
+                return true
+            }
+
+            if (pos.second < 0 || pos.second >= FIELD_WIDTH) {
+                return true
+            }
+
+            // check other stuff
+            if (!currentTetromino.positions().contains(pos)) {
+                if (fieldData[linearPos(pos)] != null) {
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 }

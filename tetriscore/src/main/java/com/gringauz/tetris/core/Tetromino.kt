@@ -64,4 +64,8 @@ enum class TetrominoType {
 class Tetromino(
     val type: TetrominoType,
     var position: Pair<Int, Int>,
-    var rotationIndex: Int)
+    var rotationIndex: Int) {
+
+    fun state() = type.states[rotationIndex]
+    fun positions() = state().map { Pair(position.first + it.first, position.second + it.second) }
+}
