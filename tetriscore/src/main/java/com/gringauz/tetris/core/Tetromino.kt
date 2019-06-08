@@ -11,23 +11,51 @@ enum class TetrominoType {
     },
     L {
         override val states = arrayOf(
-            arrayOf(Pair(0, 0), Pair(1, 0), Pair(1, 1), Pair(1, 2))
+            arrayOf(Pair(0, 0), Pair(1, 0), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 2), Pair(0, 1), Pair(1, 1), Pair(2, 1)),
+            arrayOf(Pair(2, 2), Pair(1, 2), Pair(1, 1), Pair(1, 0)),
+            arrayOf(Pair(2, 0), Pair(2, 1), Pair(1, 1), Pair(0, 1))
         )
     },
     J {
-        override val states = arrayOf(arrayOf(Pair(1,2)))
+        override val states = arrayOf(
+            arrayOf(Pair(0, 2), Pair(1, 2), Pair(1, 1), Pair(1, 0)),
+            arrayOf(Pair(2, 2), Pair(2, 1), Pair(1, 1), Pair(0, 1)),
+            arrayOf(Pair(2, 0), Pair(1, 0), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 0), Pair(0, 1), Pair(1, 1), Pair(2, 1))
+        )
     },
     O {
-        override val states = arrayOf(arrayOf(Pair(1,2)))
+        override val states = arrayOf(
+            arrayOf(Pair(0, 1), Pair(0, 2), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 1), Pair(0, 2), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 1), Pair(0, 2), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 1), Pair(0, 2), Pair(1, 1), Pair(1, 2))
+        )
     },
     S {
-        override val states = arrayOf(arrayOf(Pair(1,2)))
+        override val states = arrayOf(
+            arrayOf(Pair(1, 0), Pair(1, 1), Pair(0, 1), Pair(0, 2)),
+            arrayOf(Pair(0, 1), Pair(1, 1), Pair(1, 2), Pair(2, 2)),
+            arrayOf(Pair(2, 0), Pair(2, 1), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 0), Pair(1, 0), Pair(1, 1), Pair(2, 1))
+        )
     },
     T {
-        override val states = arrayOf(arrayOf(Pair(1,2)))
+        override val states = arrayOf(
+            arrayOf(Pair(1, 0), Pair(1, 1), Pair(0, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 1), Pair(1, 1), Pair(2, 1), Pair(1, 2)),
+            arrayOf(Pair(1, 0), Pair(1, 1), Pair(1, 2), Pair(2, 1)),
+            arrayOf(Pair(1, 0), Pair(1, 1), Pair(0, 1), Pair(2, 1))
+        )
     },
     Z {
-        override val states = arrayOf(arrayOf(Pair(1,2)))
+        override val states = arrayOf(
+            arrayOf(Pair(0, 0), Pair(0, 1), Pair(1, 1), Pair(1, 2)),
+            arrayOf(Pair(0, 2), Pair(1, 2), Pair(1, 1), Pair(2, 1)),
+            arrayOf(Pair(1, 0), Pair(1, 1), Pair(2, 1), Pair(2, 2)),
+            arrayOf(Pair(0, 1), Pair(1, 1), Pair(1, 0), Pair(2, 0))
+        )
     };
 
     abstract val states: Array<Array<Pair<Int, Int>>>

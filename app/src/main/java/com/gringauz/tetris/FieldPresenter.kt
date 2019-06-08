@@ -11,5 +11,7 @@ interface FieldPresenter {
 
     fun onHoldPiece()
 
+    fun onStartClick()
+
     fun setView(view: FieldView)
 }

@@ -1,9 +1,12 @@
 package com.gringauz.tetris.core.impl
 
 import com.gringauz.tetris.core.*
+import kotlin.random.Random
 
 class GameImpl: Game {
     private lateinit var currentTetromino: Tetromino
+
+    private val random = Random(42)
 
     private var listeners: HashSet<Game.Listener> = hashSetOf()
 
@@ -43,10 +46,12 @@ class GameImpl: Game {
 
     override fun start() {
         currentTetromino = Tetromino(
-            type = TetrominoType.I,
+            type = TetrominoType.values().random(random),
             position = Pair(0, 0),
             rotationIndex = 0)
 
+        fieldData.fill(null, 0, fieldData.size)
+        updateTetromino(currentTetromino)
         notifyFieldChange()
     }
 

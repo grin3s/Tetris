@@ -51,6 +51,16 @@
             android:text="@string/text_shift_right"
             android:layout_width="@dimen/size_button"
             android:layout_height="@dimen/size_button"
+            android:textSize="@dimen/textsize_button"
             android:id="@+id/bt_shift_right"/>
+    <Button
+            android:text="@string/text_bt_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/view_field_canvas"/>
 
 </com.gringauz.tetris.FieldViewImpl>

@@ -29,6 +29,7 @@ class FieldViewImpl: FieldView, ConstraintLayout {
         bt_rotate_right.setOnClickListener { presenter!!.onRightRotate() }
         bt_shift_left.setOnClickListener { presenter!!.onLeftClick() }
         bt_shift_right.setOnClickListener { presenter!!.onRightClick() }
+        bt_start.setOnClickListener { presenter!!.onStartClick() }
     }
 }
 

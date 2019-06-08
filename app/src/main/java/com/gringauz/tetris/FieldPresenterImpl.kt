@@ -3,6 +3,7 @@ package com.gringauz.tetris
 import com.gringauz.tetris.core.Game
 
 class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener {
+
     lateinit var fieldView: FieldView
 
     init {
@@ -11,6 +12,10 @@ class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener 
 
     override fun onFieldChanged() {
         fieldView.setField(game.field())
+    }
+
+    override fun onStartClick() {
+        game.start()
     }
 
     override fun onGameOver() {
