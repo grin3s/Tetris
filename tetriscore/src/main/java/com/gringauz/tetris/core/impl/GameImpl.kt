@@ -9,6 +9,8 @@ private enum class Direction {
     DOWN
 }
 
+private val SPAWN_POSITION = Pair(0, 3)
+
 class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
 
     private val gravity: Gravity = GravityImpl(eventLoop)
@@ -26,23 +28,28 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
     }
 
     override fun onTick() {
-        move(Direction.DOWN)
+        val newTetromino = move(Direction.DOWN)
+        if (collides(newTetromino)) {
+            spawn()
+        } else {
+            updateTetromino(newTetromino)
+        }
     }
 
     override fun onRightClick() {
-        move(Direction.RIGHT)
+        updateIfCan(move(Direction.RIGHT))
     }
 
     override fun onLeftClick() {
-        move(Direction.LEFT)
+        updateIfCan(move(Direction.LEFT))
     }
 
     override fun onRightRotate() {
-        rotate(1)
+        updateIfCan(rotate(1))
     }
 
     override fun onLeftRotate() {
-        rotate(-1)
+        updateIfCan(rotate(-1))
     }
 
     override fun onFastDropClick() {
@@ -62,14 +69,8 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
     }
 
     override fun start() {
-        currentTetromino = Tetromino(
-            type = TetrominoType.values().random(random),
-            position = Pair(0, 0),
-            rotationIndex = 0)
-
         fieldData.fill(null, 0, fieldData.size)
-        updateTetromino(currentTetromino)
-        notifyFieldChange()
+        spawn()
         gravity.activate()
     }
 
@@ -89,16 +90,15 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
         listeners.forEach { it.onFieldChanged() }
     }
 
-    private fun rotate(direction: Int) {
+    private fun rotate(direction: Int): Tetromino {
         var rot = (currentTetromino.rotationIndex + direction) % 4
         if (rot < 0) {
             rot += 4
         }
-        val newTetromino = Tetromino(currentTetromino.type, currentTetromino.position, rot)
-        updateTetromino(newTetromino)
+        return Tetromino(currentTetromino.type, currentTetromino.position, rot)
     }
 
-    private fun move(direction: Direction) {
+    private fun move(direction: Direction): Tetromino {
         val verticalMove = when (direction) {
             Direction.DOWN -> 1
             else -> 0
@@ -110,33 +110,34 @@ class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener {
             else -> 0
         }
 
-        val newTetromino = Tetromino(
+        return Tetromino(
             currentTetromino.type,
             Pair(
                 currentTetromino.position.first + verticalMove,
                 currentTetromino.position.second + horizontalMove),
             currentTetromino.rotationIndex)
+    }
 
-        updateTetromino(newTetromino)
+    private fun spawn() {
+        currentTetromino = Tetromino(
+            type = TetrominoType.values().random(random),
+            position = SPAWN_POSITION,
+            rotationIndex = 0)
+
+        updateTetromino(currentTetromino)
     }
 
     private fun linearPos(position: Pair<Int, Int>) = position.first * FIELD_WIDTH + position.second
 
+    private fun updateIfCan(newTetromino: Tetromino) {
+        if (!collides(newTetromino)) {
+            updateTetromino(newTetromino)
+        }
+    }
+
     private fun updateTetromino(newTetromino: Tetromino) {
-
-        if (collides(newTetromino)) {
-            return
-        }
-
-        val curPos = currentTetromino.position
-        currentTetromino.type.states[currentTetromino.rotationIndex].forEach {
-            fieldData[(curPos.first + it.first) * FIELD_WIDTH + curPos.second + it.second] = null
-        }
-
-        val newPos = newTetromino.position
-        newTetromino.type.states[newTetromino.rotationIndex].forEach {
-            fieldData[(newPos.first + it.first) * FIELD_WIDTH + newPos.second + it.second] = newTetromino.type
-        }
+        currentTetromino.positions().forEach { fieldData[linearPos(it)] = null }
+        newTetromino.positions().forEach { fieldData[linearPos(it)] = newTetromino.type }
 
         currentTetromino = newTetromino
         notifyFieldChange()

@@ -35,7 +35,7 @@ class FieldCanvas: View {
             val i = index / FIELD_WIDTH
             val j = index - i * FIELD_WIDTH
             tetrominoType?.let { squareType ->
-                paint.color =  color(squareType)
+                paint.color = color(squareType)
                 canvas!!.drawRect(
                     (j * cellWidthPx).toFloat(),
                     (i * cellHeightPx).toFloat(),

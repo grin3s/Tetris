@@ -1,7 +1,7 @@
 package com.gringauz.tetris.core
 
-val FIELD_WIDTH = 10
-val FIELD_HEIGHT = 20
+const val FIELD_WIDTH = 10
+const val FIELD_HEIGHT = 20
 
 interface Game {
     interface Listener {
