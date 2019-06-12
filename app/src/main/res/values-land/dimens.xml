@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="width_field">180dp</dimen>
+    <dimen name="height_field">360dp</dimen>
+</resources>
