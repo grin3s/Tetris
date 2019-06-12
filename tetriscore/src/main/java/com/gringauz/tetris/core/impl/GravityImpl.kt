@@ -19,15 +19,17 @@ class GravityImpl(private val eventLoop: EventLoop):
     private var handle: Handle? = null
 
     override fun activate(mode: GravityMode) {
-        handle?.cancel()
-        handle = Handle(mode).also { it.start() }
+        if (handle == null || handle?.mode != mode) {
+            handle?.cancel()
+            handle = Handle(mode).apply { start() }
+        }
     }
 
     override fun deactivate() {
         handle?.cancel()
     }
 
-    private inner class Handle(private val mode: GravityMode) {
+    private inner class Handle(val mode: GravityMode) {
         private var cancelled: Boolean = false
 
         fun start() {

@@ -1,7 +1,7 @@
 package com.gringauz.tetris.core.impl
 
+import com.gringauz.subscription.ProviderImpl
 import com.gringauz.tetris.core.*
-import kotlin.random.Random
 
 private enum class Direction {
     LEFT,
@@ -11,46 +11,97 @@ private enum class Direction {
 
 private val SPAWN_POSITION = Pair(0, 3)
 
-class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
+private fun move(direction: Direction, tetromino: Tetromino): Tetromino {
+    val verticalMove = when (direction) {
+        Direction.DOWN -> 1
+        else -> 0
+    }
+
+    val horizontalMove = when (direction) {
+        Direction.LEFT -> -1
+        Direction.RIGHT -> 1
+        else -> 0
+    }
+
+    return Tetromino(
+        tetromino.type,
+        Pair(
+            tetromino.position.first + verticalMove,
+            tetromino.position.second + horizontalMove),
+        tetromino.rotationIndex)
+}
+
+private fun rotate(direction: Int, tetromino: Tetromino): Tetromino {
+    var rot = (tetromino.rotationIndex + direction) % 4
+    if (rot < 0) {
+        rot += 4
+    }
+    return Tetromino(tetromino.type, tetromino.position, rot)
+}
+
+class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener, ProviderImpl<Game.Listener>() {
 
     private val gravity: Gravity = GravityImpl(eventLoop)
 
-    private lateinit var currentTetromino: Tetromino
-
-    private val random = Random(42)
-
-    private var listeners: HashSet<Game.Listener> = hashSetOf()
+    private var currentTetromino: Tetromino? = null
 
     private var fieldData: Array<TetrominoType?> = arrayOfNulls<TetrominoType?>(FIELD_HEIGHT * FIELD_WIDTH)
+
+    private var score: Int = 0
+        set(value) {
+            field = value
+            forEachListener { it.onScoreChanged() }
+        }
+
 
     init {
         gravity.subscribe(this)
     }
 
     override fun onTick() {
-        val newTetromino = move(Direction.DOWN)
-        if (collides(newTetromino)) {
-            gravity.deactivate()
-            eventLoop.postDelayed(500) { spawn() }
+        val newTetromino = move(Direction.DOWN, currentTetromino!!)
+        val futureTetromino = move(Direction.DOWN, newTetromino)
+
+        if (collides(futureTetromino)) {
+            updateTetromino(newTetromino)
+            var lineIdx = FIELD_HEIGHT - 1
+            while (lineIdx >= 0) {
+                var containsNull = false
+                for (idx in lineIdx * FIELD_WIDTH until (lineIdx + 1) * FIELD_WIDTH) {
+                    if (fieldData[idx] == null) {
+                        containsNull = true
+                        break
+                    }
+                }
+                if (containsNull) {
+                    lineIdx--
+                } else {
+                    for (idx in (lineIdx * FIELD_WIDTH - 1) downTo 0) {
+                        fieldData[idx + FIELD_WIDTH] = fieldData[idx]
+                    }
+                    score++
+                }
+            }
+            spawn()
         } else {
             updateTetromino(newTetromino)
         }
     }
 
     override fun onRightClick() {
-        updateIfCan(move(Direction.RIGHT))
+        updateIfCan(move(Direction.RIGHT, currentTetromino!!))
     }
 
     override fun onLeftClick() {
-        updateIfCan(move(Direction.LEFT))
+        updateIfCan(move(Direction.LEFT, currentTetromino!!))
     }
 
     override fun onRightRotate() {
-        updateIfCan(rotate(1))
+        updateIfCan(rotate(1, currentTetromino!!))
     }
 
     override fun onLeftRotate() {
-        updateIfCan(rotate(-1))
+        updateIfCan(rotate(-1, currentTetromino!!))
     }
 
     override fun onFastDropClick() {
@@ -61,15 +112,8 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun subscribe(listener: Game.Listener) {
-        listeners.add(listener)
-    }
-
-    override fun unsubscribe(listener: Game.Listener) {
-        listeners.remove(listener)
-    }
-
     override fun start() {
+        score = 0
         fieldData.fill(null, 0, fieldData.size)
         spawn()
     }
@@ -86,47 +130,29 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
         return fieldData
     }
 
+    override fun score(): Int {
+        return score
+    }
+
     private fun notifyFieldChange() {
-        listeners.forEach { it.onFieldChanged() }
-    }
-
-    private fun rotate(direction: Int): Tetromino {
-        var rot = (currentTetromino.rotationIndex + direction) % 4
-        if (rot < 0) {
-            rot += 4
-        }
-        return Tetromino(currentTetromino.type, currentTetromino.position, rot)
-    }
-
-    private fun move(direction: Direction): Tetromino {
-        val verticalMove = when (direction) {
-            Direction.DOWN -> 1
-            else -> 0
-        }
-
-        val horizontalMove = when (direction) {
-            Direction.LEFT -> -1
-            Direction.RIGHT -> 1
-            else -> 0
-        }
-
-        return Tetromino(
-            currentTetromino.type,
-            Pair(
-                currentTetromino.position.first + verticalMove,
-                currentTetromino.position.second + horizontalMove),
-            currentTetromino.rotationIndex)
+        forEachListener { it.onFieldChanged() }
     }
 
     private fun spawn() {
-        currentTetromino = Tetromino(
-            type = TetrominoType.values().random(random),
+        val newTetromino = Tetromino(
+            type = TetrominoType.values().random(),
             position = SPAWN_POSITION,
             rotationIndex = 0)
 
-        updateTetromino(currentTetromino)
+        currentTetromino = null
 
-        gravity.activate(GravityMode.ORDINARY)
+        if (collides(newTetromino)) {
+            forEachListener { it.onGameOver() }
+            gravity.deactivate()
+        } else {
+            updateTetromino(newTetromino)
+            gravity.activate(GravityMode.ORDINARY)
+        }
     }
 
     private fun linearPos(position: Pair<Int, Int>) = position.first * FIELD_WIDTH + position.second
@@ -138,7 +164,10 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
     }
 
     private fun updateTetromino(newTetromino: Tetromino) {
-        currentTetromino.positions().forEach { fieldData[linearPos(it)] = null }
+        currentTetromino?.let { cur ->
+            cur.positions().forEach { fieldData[linearPos(it)] = null }
+        }
+
         newTetromino.positions().forEach { fieldData[linearPos(it)] = newTetromino.type }
 
         currentTetromino = newTetromino
@@ -156,9 +185,12 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener {
                 return true
             }
 
-            // check other stuff
-            if (!currentTetromino.positions().contains(pos)) {
-                if (fieldData[linearPos(pos)] != null) {
+            if (fieldData[linearPos(pos)] != null) {
+                if (currentTetromino != null) {
+                    if (!currentTetromino!!.positions().contains(pos)) {
+                        return true
+                    }
+                } else {
                     return true
                 }
             }

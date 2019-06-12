@@ -1,8 +1,10 @@
 package com.gringauz.tetris
 
+import android.content.Context
+import android.widget.Toast
 import com.gringauz.tetris.core.Game
 
-class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener {
+class FieldPresenterImpl(private val game: Game, private val context: Context): FieldPresenter, Game.Listener {
 
     lateinit var fieldView: FieldView
 
@@ -19,11 +21,11 @@ class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener 
     }
 
     override fun onGameOver() {
-
+        Toast.makeText(context, "Game over", Toast.LENGTH_LONG).show()
     }
 
     override fun onScoreChanged() {
-
+        fieldView.setScore(game.score())
     }
 
     override fun setView(view: FieldView) {
@@ -52,5 +54,9 @@ class FieldPresenterImpl(private val game: Game): FieldPresenter, Game.Listener 
 
     override fun onHoldPiece() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPauseClick() {
+        game.pause()
     }
 }

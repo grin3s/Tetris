@@ -1,17 +1,16 @@
 package com.gringauz.tetris.core
 
+import com.gringauz.subscription.Provider
+
 const val FIELD_WIDTH = 10
 const val FIELD_HEIGHT = 20
 
-interface Game {
+interface Game: Provider<Game.Listener> {
     interface Listener {
         fun onFieldChanged()
         fun onGameOver()
         fun onScoreChanged()
     }
-
-    fun subscribe(listener: Listener)
-    fun unsubscribe(listener: Listener)
 
     fun start()
     fun pause()
@@ -28,4 +27,6 @@ interface Game {
     fun onHoldPiece()
 
     fun field(): Array<TetrominoType?>
+
+    fun score(): Int
 }

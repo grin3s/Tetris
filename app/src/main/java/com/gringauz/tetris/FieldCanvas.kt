@@ -3,7 +3,6 @@ package com.gringauz.tetris
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.support.annotation.ColorRes
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View

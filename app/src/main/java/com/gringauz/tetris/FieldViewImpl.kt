@@ -7,7 +7,6 @@ import com.gringauz.tetris.core.TetrominoType
 import kotlinx.android.synthetic.main.layout_field.view.*
 
 class FieldViewImpl: FieldView, ConstraintLayout {
-
     var presenter: FieldPresenter? = null
         set(value) {
             field = value
@@ -22,6 +21,10 @@ class FieldViewImpl: FieldView, ConstraintLayout {
         view_field_canvas.field = field
     }
 
+    override fun setScore(score: Int) {
+        text_score.text = score.toString()
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
 
@@ -31,6 +34,7 @@ class FieldViewImpl: FieldView, ConstraintLayout {
         bt_shift_right.setOnClickListener { presenter!!.onRightClick() }
         bt_start.setOnClickListener { presenter!!.onStartClick() }
         bt_fast_drop.setOnClickListener { presenter!!.onFastDropClick() }
+        bt_pause.setOnClickListener { presenter!!.onPauseClick() }
     }
 }
 

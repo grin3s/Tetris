@@ -13,5 +13,7 @@ interface FieldPresenter {
 
     fun onStartClick()
 
+    fun onPauseClick()
+
     fun setView(view: FieldView)
 }

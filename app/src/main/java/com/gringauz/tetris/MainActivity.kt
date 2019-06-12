@@ -22,6 +22,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val game = GameImpl(eventLoop)
-        (view_field as FieldViewImpl).presenter = FieldPresenterImpl(game)
+        (view_field as FieldViewImpl).presenter = FieldPresenterImpl(game, this)
     }
 }

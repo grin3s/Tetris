@@ -11,4 +11,6 @@
     <color name="color_tetromino_s">#00ff00</color>
     <color name="color_tetromino_t">#ba55d3</color>
     <color name="color_tetromino_z">#ff4500</color>
+
+    <color name="color_canvas_bg">#bebebe</color>
 </resources>
