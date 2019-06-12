@@ -75,6 +75,16 @@
             android:layout_height="wrap_content"
             android:id="@+id/bt_pause"/>
 
+    <Button
+            android:text="@string/text_bt_resume"
+            app:layout_constraintTop_toBottomOf="@id/bt_start"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/indent_double"
+            android:layout_marginTop="@dimen/indent_double"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_resume"/>
+
     <TextView
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

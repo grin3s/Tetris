@@ -12,9 +12,10 @@ interface Game: Provider<Game.Listener> {
         fun onScoreChanged()
     }
 
-    fun start()
+    fun restart()
+
     fun pause()
-    fun end()
+    fun resume()
 
     fun onRightClick()
     fun onLeftClick()

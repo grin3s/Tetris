@@ -3,6 +3,7 @@ package com.gringauz.tetris
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.view.View
 import com.gringauz.tetris.core.TetrominoType
 import kotlinx.android.synthetic.main.layout_field.view.*
 import javax.inject.Inject
@@ -23,6 +24,14 @@ class FieldViewImpl: FieldView, ConstraintLayout {
         text_score.text = score.toString()
     }
 
+    override fun setPauseButtonVisible(visible: Boolean) {
+        bt_pause.isVisible = visible
+    }
+
+    override fun setResumeButtonVisible(visible: Boolean) {
+        bt_resume.isVisible = visible
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
 
@@ -36,6 +45,7 @@ class FieldViewImpl: FieldView, ConstraintLayout {
         bt_start.setOnClickListener { presenter.onStartClick() }
         bt_fast_drop.setOnClickListener { presenter.onFastDropClick() }
         bt_pause.setOnClickListener { presenter.onPauseClick() }
+        bt_resume.setOnClickListener { presenter.onResumeClick() }
     }
 }
 

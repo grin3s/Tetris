@@ -12,6 +12,8 @@ interface Gravity: Provider<Gravity.Listener> {
         fun onTick()
     }
 
-    fun activate(mode: GravityMode)
+    fun setMode(mode: GravityMode)
+
+    fun activate()
     fun deactivate()
 }

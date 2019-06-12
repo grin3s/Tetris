@@ -4,7 +4,8 @@
     <string name="text_bt_rotate_left">Left</string>
     <string name="text_rotate_right">Right</string>
     <string name="text_shift_right"><![CDATA[->]]></string>
-    <string name="text_bt_start">Start</string>
+    <string name="text_bt_start">Restart</string>
     <string name="text_bt_drop">Drop</string>
     <string name="text_bt_stop">Pause</string>
+    <string name="text_bt_resume">Resume</string>
 </resources>

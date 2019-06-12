@@ -39,7 +39,7 @@ private fun rotate(direction: Int, tetromino: Tetromino): Tetromino {
     return Tetromino(tetromino.type, tetromino.position, rot)
 }
 
-class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener, ProviderImpl<Game.Listener>() {
+class GameImpl(eventLoop: EventLoop): Game, Gravity.Listener, ProviderImpl<Game.Listener>() {
 
     private val gravity: Gravity = GravityImpl(eventLoop)
 
@@ -53,6 +53,7 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener, Provid
             forEachListener { it.onScoreChanged() }
         }
 
+    private var paused: Boolean = true
 
     init {
         gravity.subscribe(this)
@@ -105,25 +106,32 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener, Provid
     }
 
     override fun onFastDropClick() {
-        gravity.activate(GravityMode.FAST)
+        if (paused) {
+            return
+        }
+
+        gravity.setMode(GravityMode.FAST)
     }
 
     override fun onHoldPiece() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun start() {
+    override fun restart() {
         score = 0
         fieldData.fill(null, 0, fieldData.size)
         spawn()
+        paused = false
     }
 
     override fun pause() {
         gravity.deactivate()
+        paused = true
     }
 
-    override fun end() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun resume() {
+        gravity.activate()
+        paused = false
     }
 
     override fun field(): Array<TetrominoType?> {
@@ -151,13 +159,16 @@ class GameImpl(private val eventLoop: EventLoop): Game, Gravity.Listener, Provid
             gravity.deactivate()
         } else {
             updateTetromino(newTetromino)
-            gravity.activate(GravityMode.ORDINARY)
+            gravity.setMode(GravityMode.ORDINARY)
         }
     }
 
     private fun linearPos(position: Pair<Int, Int>) = position.first * FIELD_WIDTH + position.second
 
     private fun updateIfCan(newTetromino: Tetromino) {
+        if (paused) {
+            return
+        }
         if (!collides(newTetromino)) {
             updateTetromino(newTetromino)
         }

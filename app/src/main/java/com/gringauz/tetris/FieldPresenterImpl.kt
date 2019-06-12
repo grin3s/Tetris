@@ -17,7 +17,9 @@ class FieldPresenterImpl (private val game: Game, private val context: Context):
     }
 
     override fun onStartClick() {
-        game.start()
+        game.restart()
+        fieldView.setResumeButtonVisible(false)
+        fieldView.setPauseButtonVisible(true)
     }
 
     override fun onGameOver() {
@@ -30,6 +32,8 @@ class FieldPresenterImpl (private val game: Game, private val context: Context):
 
     override fun setView(view: FieldView) {
         fieldView = view
+        fieldView.setPauseButtonVisible(true)
+        fieldView.setResumeButtonVisible(false)
     }
 
     override fun onRightClick() {
@@ -58,5 +62,14 @@ class FieldPresenterImpl (private val game: Game, private val context: Context):
 
     override fun onPauseClick() {
         game.pause()
+        fieldView.setResumeButtonVisible(true)
+        fieldView.setPauseButtonVisible(false)
+
+    }
+
+    override fun onResumeClick() {
+        game.resume()
+        fieldView.setResumeButtonVisible(false)
+        fieldView.setPauseButtonVisible(true)
     }
 }
