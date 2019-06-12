@@ -11,16 +11,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var game: Game
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        (applicationContext as TetrisApplication).appComponent.inject(this)
-
-        (view_field as FieldViewImpl).presenter = FieldPresenterImpl(game, this)
     }
 }

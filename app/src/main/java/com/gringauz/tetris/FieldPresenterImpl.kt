@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.gringauz.tetris.core.Game
 
-class FieldPresenterImpl(private val game: Game, private val context: Context): FieldPresenter, Game.Listener {
+class FieldPresenterImpl (private val game: Game, private val context: Context): FieldPresenter, Game.Listener {
 
     lateinit var fieldView: FieldView
 
